@@ -1,0 +1,26 @@
+<html>
+        <p>Вы вошли как {{ u_name }}</p>
+        <a href="{% url 'logout' %}">Выйти</a>
+        <p>ежемесячная сумма выплат: {{ pay_count }}</p>
+        <p>всего выплат: {{ all_pay }}</p>
+        <p>переплата по кредиту: {{ over_pay }}</p>
+        <h3>График выплат:</h3>
+        <div>
+        <ul>
+            <li>дата</li>
+            <li>сумма выплаты</li>
+            <li>погашение кредита</li>
+            <li>погашение процентов</li>
+            <li>остаток долга</li>
+        </ul>
+            {% for cur_str in cur_pay_graf %}
+                <ul>
+                    <li>{{ cur_str.date }}</li>
+                    <li>{{ cur_str.pay_count }}</li>
+                    <li>{{ cur_str.pay_cred }}</li>
+                    <li>{{ cur_str.pay_percent }}</li>
+                    <li>{{ cur_str.all_left }}</li>
+                </ul>
+            {% endfor %}
+        </div>
+</html>

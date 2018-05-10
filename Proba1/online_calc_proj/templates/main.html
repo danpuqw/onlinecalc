@@ -1,0 +1,63 @@
+<html>
+{% block title %}
+    Онлайн-калькулятор ипотеки
+{% endblock %}
+{% block main %}
+    <h1>Онлайн-калькулятор ипотеки</h1>
+    {% if u_name != '' %}
+        <p>Вы вошли как {{ u_name }}</p>
+        <a href="{% url 'logout' %}">Выйти</a>
+        <a href="{% url 'saved_credits' %}">Мои кредиты</a>
+    {% else %}
+        <p>Вы вошли как ГОСТЬ</p>
+        <a href="{% url 'login' %}">Войти</a>
+        <a href="{% url 'register' %}">Зарегестрироваться</a>
+    {% endif %}
+    <div>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.label == 'Срок выплат' %}
+                <p>{{ field.label_tag }} {{ field }}
+            {% endif %}
+            {% if field.label == '' %}
+                {{ field }} </p>
+            {% endif %}
+            {% if field.label != 'Срок выплат' and field.label != '' %}
+                <p>{{ field.label_tag }} {{ field }}</p>
+            {% endif %}
+        {% endfor %}
+        <input type="submit" value="подтвердить">
+    </form>
+    {% if pay_count %}
+        <p>ежемесячная сумма выплат: {{ pay_count }}</p>
+        <p>всего выплат: {{ all_pay }}</p>
+        <p>переплата по кредиту: {{ over_pay }}</p>
+        {% if u_name != '' %}
+            <a href="{% url 'save' temp_id %}">сохранить</a>
+        {% else %}
+            <p>Войдите чтобы сохранить результат</p>
+        {% endif %}
+        <h3>График выплат:</h3>
+        <div>
+        <ul>
+            <li>дата</li>
+            <li>сумма выплаты</li>
+            <li>погашение кредита</li>
+            <li>погашение процентов</li>
+            <li>остаток долга</li>
+        </ul>
+            {% for cur_str in cur_pay_graf %}
+                <ul>
+                    <li>{{ cur_str.date }}</li>
+                    <li>{{ cur_str.pay_count }}</li>
+                    <li>{{ cur_str.pay_cred }}</li>
+                    <li>{{ cur_str.pay_percent }}</li>
+                    <li>{{ cur_str.all_left }}</li>
+                </ul>
+            {% endfor %}
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}
+</html>
