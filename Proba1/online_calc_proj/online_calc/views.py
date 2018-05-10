@@ -9,7 +9,7 @@ import datetime
 
 
 def my_count(all_cost, first_pay, term, term_modif, percent):
-    if term_modif == 'лет':
+    if term_modif == 2:
         term = term * 12
     percent = percent / 12 / 100
     i = 1
@@ -44,7 +44,7 @@ def my_count(all_cost, first_pay, term, term_modif, percent):
         new_str.save()
         i = i + 1
     y = pay_graf.objects.all().last()
-    if term_modif == 'лет':
+    if term_modif == 2:
         term = term / 12
     new_credit = credit_temp.objects.create(all_cost=all_cost,term=term,term_modif=term_modif,first_pay=first_pay,percent=percent)
     new_credit.save()
@@ -79,12 +79,12 @@ def portal_main(request):
                                                  'over_pay': over_pay, 'cur_pay_graf': cur_pay_graf,
                                                  'temp_id': temp_id, 'u_name': u_name})
     else:
-        if request.user.username != "":
-            u_name = request.user.username
-        else:
-            u_name = ""
         form = credit_form()
-        return render(request, 'main.html', {'form':form,'u_name':u_name})
+    if request.user.username != "":
+        u_name = request.user.username
+    else:
+        u_name = ""
+    return render(request, 'main.html', {'form':form,'u_name':u_name})
 
 
 def DD_login(request):

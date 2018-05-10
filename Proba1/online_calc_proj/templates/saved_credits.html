@@ -12,7 +12,7 @@
         <p>Первоначальная сумма: {{ credit.all_cost }}</p>
         <p>Вступительный взнос: {{ credit.first_pay }}</p>
         <p>Процентная ставка: </p>
-        <p>Срок кредита: {{ credit.term }} {{ credit.term_modif }}</p>
+        <p>Срок кредита: {{ credit.term }} {% if credit.term_modif == 1 %}месяцев{% else %}лет{% endif %}</p>
         <p>Дата создания: {{ credit.creation_date }}</p>
         <h4>Состояние на текущий момент</h4>
         <p>Текущая сумма: {{ credit.cur_left }}</p>

@@ -14,7 +14,7 @@ class credit_form(ModelForm):
             'term_modif': '',
         }
         widgets = {
-            'term_modif': forms.Select
+
         }
 
 

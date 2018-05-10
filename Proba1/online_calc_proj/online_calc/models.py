@@ -5,10 +5,10 @@ class credit(models.Model):
     all_cost = models.IntegerField()
     first_pay = models.IntegerField()
     term = models.IntegerField()
-    term_modif = models.CharField(choices=(
+    term_modif = models.IntegerField(choices=(
         (1, 'месяцев'),
         (2, 'лет')
-    ), max_length=20, default=1)
+    ), default=2)
     percent = models.DecimalField(max_digits=14, decimal_places=2)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     cur_left = models.DecimalField(max_digits=14, decimal_places=2, blank=True)
