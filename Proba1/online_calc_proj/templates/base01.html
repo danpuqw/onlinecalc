@@ -1,0 +1,30 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load bootstrap3 %}
+    <script src="{% bootstrap_jquery_url %}"></script>
+    {% bootstrap_javascript %}
+    {% bootstrap_css %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/base01.css' %}">
+    <title>{% block title %}
+
+    {% endblock %}</title>
+</head>
+<body>
+
+<div id="main">
+    {% block main %}
+
+    {% endblock %}
+</div>
+
+<div class="col-xs-12 col-md-12">
+
+    <div id="footer">
+
+    </div>
+</div>
+</body>
+</html>

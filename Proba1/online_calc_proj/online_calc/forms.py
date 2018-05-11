@@ -20,7 +20,7 @@ class credit_form(ModelForm):
 
 class DD_LoginForm(forms.Form):
     username = forms.CharField(label="Имя пользователя", max_length=64)
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(label="Пароль",widget=forms.PasswordInput())
 
 
 class RegisterForm(forms.Form):

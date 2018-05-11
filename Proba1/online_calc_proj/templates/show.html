@@ -1,26 +1,92 @@
-<html>
-        <p>Вы вошли как {{ u_name }}</p>
-        <a href="{% url 'logout' %}">Выйти</a>
+{% extends "base01.html" %}
+{% load staticfiles %}
+{% load bootstrap_tags %}
+{% block title %}
+    Онлайн-калькулятор ипотеки
+{% endblock %}
+{% block main %}
+    <nav class="navbar navbar-inverse">
+  <!-- Контейнер (определяет ширину Navbar) -->
+  <div class="container-fluid">
+    <!-- Заголовок -->
+    <div class="navbar-header">
+      <!-- Кнопка «Гамбургер» отображается только в мобильном виде (предназначена для открытия основного содержимого Navbar) -->
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- Бренд или название сайта (отображается в левой части меню) -->
+      <a class="navbar-brand" href="#">Онлайн-калькулятор ипотеки</a>
+    </div>
+    <!-- Основная часть меню (может содержать ссылки, формы и другие элементы) -->
+    <div class="collapse navbar-collapse" id="navbar-main">
+      <!-- Содержимое основной части -->
+        <ul class="nav navbar-nav">
+        <li><a href="{% url 'main' %}">На главную</a></li>
+        <li><a href="{% url 'saved_credits' %}">Сохраненные кредиты</a></li>
+      </ul>
+        {% if u_name != '' %}
+            <p class="navbar-text navbar-right">Привет, {{ u_name }} <a href="{% url 'logout' %}">Выйти</a> </p>
+        {% else %}
+        <p class="navbar-text navbar-right">Привет, ГОСТЬ <a href="{% url 'login' %}">Войти</a> <a href="{% url 'register' %}">Заригестрироваться</a></p>
+        {% endif %}
+    </div>
+  </div>
+</nav><div class="container">
+<h2>Описание подробно</h2>
+<br />
+        <p class="lead">Сохраненные данные</p>
+        <p>Первоначальная сумма: {{ credit.all_cost }}</p>
+        <p>Вступительный взнос: {{ credit.first_pay }}</p>
+        <p>Процентная ставка: {{ credit.percent }}</p>
+        <p>Срок кредита: {{ credit.term }} {% if credit.term_modif == 1 %}месяцев{% else %}лет{% endif %}</p>
+        <p>Дата создания: {{ credit.creation_date.day }} {% if credit.creation_date.month == 1 %}января
+                        {% elif credit.creation_date.month == 2 %}февраля
+                        {% elif credit.creation_date.month == 3 %}марта
+                        {% elif credit.creation_date.month == 4 %}апреля
+                        {% elif credit.creation_date.month == 5 %}мая
+                        {% elif credit.creation_date.month == 6 %}июня
+                        {% elif credit.creation_date.month == 7 %}июля
+                        {% elif credit.creation_date.month == 8 %}августа
+                        {% elif credit.creation_date.month == 9 %}сентября
+                        {% elif credit.creation_date.month == 10 %}октября
+                        {% elif credit.creation_date.month == 11 %}ноября
+                        {% elif credit.creation_date.month == 12 %}декабря{% endif %} {{ credit.creation_date.year }} года</p>
+        <p class="lead">Состояние на текущий момент</p>
+        <p>Текущая сумма: {{ credit.cur_left }}</p>
+        <p class="lead">Рассчетные данные:</p>
         <p>ежемесячная сумма выплат: {{ pay_count }}</p>
         <p>всего выплат: {{ all_pay }}</p>
         <p>переплата по кредиту: {{ over_pay }}</p>
         <h3>График выплат:</h3>
-        <div>
-        <ul>
-            <li>дата</li>
-            <li>сумма выплаты</li>
-            <li>погашение кредита</li>
-            <li>погашение процентов</li>
-            <li>остаток долга</li>
-        </ul>
+        <table class="table table-striped">
+        <tr>
+            <th>дата</th>
+            <th>сумма выплаты</th>
+            <th>погашение кредита</th>
+            <th>погашение процентов</th>
+            <th>остаток долга</th>
+        </tr>
             {% for cur_str in cur_pay_graf %}
-                <ul>
-                    <li>{{ cur_str.date }}</li>
-                    <li>{{ cur_str.pay_count }}</li>
-                    <li>{{ cur_str.pay_cred }}</li>
-                    <li>{{ cur_str.pay_percent }}</li>
-                    <li>{{ cur_str.all_left }}</li>
-                </ul>
+                <tr>
+                    <td>{% if cur_str.date.month == 1 %}Январь
+                        {% elif cur_str.date.month == 2 %}Февраль
+                        {% elif cur_str.date.month == 3 %}Март
+                        {% elif cur_str.date.month == 4 %}Апрель
+                        {% elif cur_str.date.month == 5 %}Май
+                        {% elif cur_str.date.month == 6 %}Июнь
+                        {% elif cur_str.date.month == 7 %}Июль
+                        {% elif cur_str.date.month == 8 %}Август
+                        {% elif cur_str.date.month == 9 %}Сентябрь
+                        {% elif cur_str.date.month == 10 %}Октябрь
+                        {% elif cur_str.date.month == 11 %}Ноябрь
+                        {% elif cur_str.date.month == 12 %}Декабрь{% endif %}, {{ cur_str.date.year }}</td>
+                    <td>{{ cur_str.pay_count }}</td>
+                    <td>{{ cur_str.pay_cred }}</td>
+                    <td>{{ cur_str.pay_percent }}</td>
+                    <td>{{ cur_str.all_left }}</td>
+                </tr>
             {% endfor %}
-        </div>
-</html>
+        </table></div>
+{% endblock %}

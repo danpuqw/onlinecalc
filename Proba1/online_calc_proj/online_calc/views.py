@@ -18,7 +18,7 @@ def my_count(all_cost, first_pay, term, term_modif, percent):
         znam = znam + (1 + percent) ** i
         i = i + 1
     month_pay = ((all_cost - first_pay) * ((1 + percent) ** term)) / znam
-    all_pay = month_pay * term
+    all_pay = month_pay * term + first_pay
     over_pay = all_pay - all_cost
     i = 1
     now = timezone.now()
@@ -39,6 +39,10 @@ def my_count(all_cost, first_pay, term, term_modif, percent):
         if cur_date.month == 1:
             delta = datetime.timedelta(days=28)
         cur_date = cur_date + delta
+        pay_count = round(pay_count, 2)
+        all_left = round(all_left, 2)
+        pay_cred = round(pay_cred, 2)
+        pay_percent = round(pay_percent, 2)
         new_str = pay_graf.objects.create(date=cur_date, pay_count=pay_count, all_left=all_left,
                                           pay_cred=pay_cred, pay_percent=pay_percent)
         new_str.save()
@@ -46,10 +50,14 @@ def my_count(all_cost, first_pay, term, term_modif, percent):
     y = pay_graf.objects.all().last()
     if term_modif == 2:
         term = term / 12
+    percent = percent * 12 * 100
     new_credit = credit_temp.objects.create(all_cost=all_cost,term=term,term_modif=term_modif,first_pay=first_pay,percent=percent)
     new_credit.save()
     last_credit_temp = credit_temp.objects.last()
     temp_id = last_credit_temp.id
+    pay_count = round(pay_count, 2)
+    all_pay = round(all_pay, 2)
+    over_pay = round(over_pay, 2)
     result = {'pay_count': pay_count, 'all_pay': all_pay, 'over_pay': over_pay, 'temp_id': temp_id}
     return result
 
@@ -105,7 +113,11 @@ def DD_login(request):
                 print("The username and password were incorrect.")
     else:
         form = DD_LoginForm()
-    return render(request, 'login.html', {'form': form})
+    if request.user.username != "":
+        u_name = request.user.username
+    else:
+        u_name = ""
+    return render(request, 'login.html', {'form': form,'u_name':u_name})
 
 
 def DD_logout(request):
@@ -136,7 +148,11 @@ def register(request):
                 print("The username and password were incorrect.")
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form':form})
+    if request.user.username != "":
+        u_name = request.user.username
+    else:
+        u_name = ""
+    return render(request, 'register.html', {'form':form,'u_name':u_name})
 
 
 def save(request, id):
@@ -152,7 +168,7 @@ def save(request, id):
         creation_date = datetime.datetime.now()
         new_credit = credit.objects.create(all_cost=all_cost, first_pay=first_pay, percent=percent, term=term, term_modif=term_modif, owner=user, cur_left=cur_left, creation_date=creation_date)
         new_credit.save()
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/saved_credits/')
     else:
         return HttpResponseRedirect('/login/')
 
@@ -184,6 +200,7 @@ def show_credits(request):
             k = k + 30
         cur_left = cred.all_cost - cred.first_pay - payed
         cred.cur_left = cur_left
+        percent = percent * 12 * 100
     return render(request, 'saved_credits.html', {'credits':cur_credits,'u_name':u_name})
 
 
@@ -209,7 +226,7 @@ def show_all(request, id):
         u_name = ""
     return render(request, 'show.html', {'pay_count': pay_count, 'all_pay': all_pay,
                                          'over_pay': over_pay, 'cur_pay_graf': cur_pay_graf,
-                                         'temp_id': temp_id, 'u_name': u_name})
+                                         'temp_id': temp_id, 'u_name': u_name,'credit':cur_credit})
 
 
 

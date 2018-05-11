@@ -1,24 +1,63 @@
-<html>
+{% extends "base01.html" %}
+{% load staticfiles %}
+{% load bootstrap_tags %}
 {% block title %}
     Онлайн-калькулятор ипотеки
 {% endblock %}
 {% block main %}
-    <h1>Онлайн-калькулятор ипотеки</h1>
-    <p>Вы вошли как {{ u_name }}</p>
-    <a href="{% url 'logout' %}">Выйти</a>
+    <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Онлайн-калькулятор ипотеки</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-main">
+        <ul class="nav navbar-nav">
+        <li><a href="{% url 'main' %}">На главную</a></li>
+        <li><a href="{% url 'saved_credits' %}">Сохраненные кредиты</a></li>
+      </ul>
+        {% if u_name != '' %}
+            <p class="navbar-text navbar-right">Привет, {{ u_name }} <a href="{% url 'logout' %}">Выйти</a> </p>
+        {% else %}
+        <p class="navbar-text navbar-right">Привет, ГОСТЬ <a href="{% url 'login' %}">Войти</a> <a href="{% url 'register' %}">Заригестрироваться</a></p>
+        {% endif %}
+    </div>
+  </div>
+</nav>
+    <div class="container">
+    {% if u_name != "" %}
     <h3>Сохраненные кредиты</h3>
+    <br />
     {% for credit in credits %}
-        <h4>Сохраненные данные</h4>
+        <p class="lead">Сохраненные данные</p>
         <p>Первоначальная сумма: {{ credit.all_cost }}</p>
         <p>Вступительный взнос: {{ credit.first_pay }}</p>
-        <p>Процентная ставка: </p>
+        <p>Процентная ставка: {{ credit.percent }}</p>
         <p>Срок кредита: {{ credit.term }} {% if credit.term_modif == 1 %}месяцев{% else %}лет{% endif %}</p>
-        <p>Дата создания: {{ credit.creation_date }}</p>
-        <h4>Состояние на текущий момент</h4>
+        <p>Дата создания: {{ credit.creation_date.day }} {% if credit.creation_date.month == 1 %}января
+                        {% elif credit.creation_date.month == 2 %}февраля
+                        {% elif credit.creation_date.month == 3 %}марта
+                        {% elif credit.creation_date.month == 4 %}апреля
+                        {% elif credit.creation_date.month == 5 %}мая
+                        {% elif credit.creation_date.month == 6 %}июня
+                        {% elif credit.creation_date.month == 7 %}июля
+                        {% elif credit.creation_date.month == 8 %}августа
+                        {% elif credit.creation_date.month == 9 %}сентября
+                        {% elif credit.creation_date.month == 10 %}октября
+                        {% elif credit.creation_date.month == 11 %}ноября
+                        {% elif credit.creation_date.month == 12 %}декабря{% endif %} {{ credit.creation_date.year }} года</p>
+        <p class="lead">Состояние на текущий момент</p>
         <p>Текущая сумма: {{ credit.cur_left }}</p>
-        <a href="{% url 'show_all' credit.id %}">Показать рассчетные данные и график выплат</a>
+        <a href="{% url 'show_all' credit.id %}">Показать подробнее</a>
         <a href="{% url 'delete' credit.id %}">Удалить</a>
         <p>-----------------------------------------------------------------------------------------------</p>
     {% endfor %}
+    {% else %}
+        <p><a href="{% url 'login' %}">Войдите</a> чтобы посмотреть сохраненные результаты</p>
+    {% endif %}
+    </div>
 {% endblock %}
-</html>

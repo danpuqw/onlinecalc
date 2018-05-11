@@ -1,14 +1,51 @@
-<html>
+{% extends "base01.html" %}
+{% load staticfiles %}
+{% load bootstrap_tags %}
+{% block title %}
+    Онлайн-калькулятор ипотеки
+{% endblock %}
+{% block main %}
+    <nav class="navbar navbar-inverse">
+  <!-- Контейнер (определяет ширину Navbar) -->
+  <div class="container-fluid">
+    <!-- Заголовок -->
+    <div class="navbar-header">
+      <!-- Кнопка «Гамбургер» отображается только в мобильном виде (предназначена для открытия основного содержимого Navbar) -->
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- Бренд или название сайта (отображается в левой части меню) -->
+      <a class="navbar-brand" href="#">Онлайн-калькулятор ипотеки</a>
+    </div>
+    <!-- Основная часть меню (может содержать ссылки, формы и другие элементы) -->
+    <div class="collapse navbar-collapse" id="navbar-main">
+      <!-- Содержимое основной части -->
+        <ul class="nav navbar-nav">
+        <li><a href="{% url 'main' %}">На главную</a></li>
+        <li><a href="{% url 'saved_credits' %}">Сохраненные кредиты</a></li>
+      </ul>
+        {% if u_name != '' %}
+            <p class="navbar-text navbar-right">Привет, {{ u_name }} <a href="{% url 'logout' %}">Выйти</a> </p>
+        {% else %}
+        <p class="navbar-text navbar-right">Привет, ГОСТЬ <a href="{% url 'login' %}">Войти</a> <a href="{% url 'register' %}">Заригестрироваться</a></p>
+        {% endif %}
+    </div>
+  </div>
+</nav>
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
 </head>
 <body>
+<div class="col-xs-12 col-md-2">
 <h1>Авторизация</h1>
 <form method="post" action=".">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Подтвердить" />
+    {{ form|as_bootstrap }}
+    <input class="btn btn-primary" type="submit" value="Подтвердить" />
 </form>
+</div>
 </body>
-</html>
+{% endblock %}
